@@ -1,158 +1,306 @@
-# Phaser Vite TypeScript Template
+# Commenters Fight 🥊
 
-This is a Phaser 3 project template that uses Vite for bundling. It supports hot-reloading for quick development workflow, includes TypeScript support and scripts to generate production-ready builds.
+**Commenters Fight** is an entertaining battle royale game built with Phaser 3 where YouTube commenters become playable characters fighting in an arena! Watch as real YouTube usernames battle it out in Joust-style aerial combat.
 
-**[This Template is also available as a JavaScript version.](https://github.com/phaserjs/template-vite)**
+### 🎮 Game Features
 
-### Versions
+- **Dynamic Player Generation**: Fetches real YouTube commenters from video comments and turns them into fighters
+- **Joust-Style Combat**: Players fly around the arena and try to stomp each other from above
+- **Progressive Difficulty**: Game speeds up as fewer players remain, with progressive speed boosts
+- **Grace Period System**: 3-second protection period at game start and after respawns
+- **Real-time Scoring**: Track eliminations and see who's dominating the arena
+- **Responsive Design**: Full-screen gameplay that adapts to any screen size
+- **Mock Data Support**: Works offline with pre-generated commenter data for development
 
-This template has been updated for:
+### 🛠️ Built With
 
-- [Phaser 3.90.0](https://github.com/phaserjs/phaser)
-- [Vite 6.3.1](https://github.com/vitejs/vite)
-- [TypeScript 5.7.2](https://github.com/microsoft/TypeScript)
+- [Phaser 3.90.0](https://github.com/phaserjs/phaser) - Game engine
+- [Vite 6.3.1](https://github.com/vitejs/vite) - Build tool and dev server
+- [TypeScript 5.7.2](https://github.com/microsoft/TypeScript) - Type safety
 
-![screenshot](screenshot.png)
+### 🎯 How to Play
 
-## Requirements
+1. **Start the Game**: Launch the development server and open the game in your browser
+2. **Watch the Battle**: YouTube commenters automatically spawn as colored squares with their usernames
+3. **Camera Controls**: Use arrow keys to move the camera around the battlefield
+4. **Combat Mechanics**: Players automatically fly around and try to stomp each other from above
+5. **Scoring**: Players earn points for eliminating others - watch the live scoreboard
+6. **Winner Declaration**: When only one player remains, they're declared the winner and all players respawn
+
+### 🎮 Game Mechanics
+
+- **Flappy Bird Movement**: Players automatically "flap" to stay airborne with gravity pulling them down
+- **Joust Combat**: Players must be above their opponents to eliminate them on collision
+- **Speed Boosts**: Game speeds up when fewer than 8 players remain, with progressive increases every 10 seconds
+- **Screen Wrapping**: Players teleport to the opposite side when they leave the camera view
+- **Grace Period**: 3-second protection at game start prevents immediate eliminations
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 [Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
 
-## Available Commands
+### Installation & Running
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd commenters-fight
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The game will be available at `http://localhost:8080` by default.
+
+## 📋 Available Commands
 
 | Command | Description |
 |---------|-------------|
 | `npm install` | Install project dependencies |
-| `npm run dev` | Launch a development web server |
-| `npm run build` | Create a production build in the `dist` folder |
-| `npm run dev-nolog` | Launch a development web server without sending anonymous data (see "About log.js" below) |
-| `npm run build-nolog` | Create a production build in the `dist` folder without sending anonymous data (see "About log.js" below) |
+| `npm run dev` | Launch development server with analytics |
+| `npm run build` | Create production build in the `dist` folder |
+| `npm run dev-nolog` | Launch development server without analytics |
+| `npm run build-nolog` | Create production build without analytics |
 
-## Writing Code
+## 🎮 YouTube Integration
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development server by running `npm run dev`.
+The game features a YouTube service that fetches real commenter names from videos:
 
-The local development server runs on `http://localhost:8080` by default. Please see the Vite documentation if you wish to change this, or add SSL support.
+- **Mock Mode** (default): Uses pre-generated mock data from `public/mock-data/youtube-comments.json`
+- **Live Mode**: Requires YouTube Data API v3 key to fetch real comments
+- **Fallback Player**: "ElodineCodes" is always included as a guaranteed player
 
-Once the server is running you can edit any of the files in the `src` folder. Vite will automatically recompile your code and then reload the browser.
+### Setting Up YouTube API (Optional)
 
-## Template Project Structure
+To use real YouTube comments instead of mock data:
 
-We have provided a default project structure to get you started. This is as follows:
+1. Get a YouTube Data API v3 key from [Google Cloud Console](https://console.cloud.google.com/)
+2. Configure the `YouTubeService` in `src/services/YouTubeService.ts`
+3. Set `mockMode: false` when initializing the service
 
-## Template Project Structure
-
-We have provided a default project structure to get you started:
+## 🏗️ Project Structure
 
 | Path                         | Description                                                |
 |------------------------------|------------------------------------------------------------|
-| `index.html`                 | A basic HTML page to contain the game.                     |
-| `public/assets`              | Game sprites, audio, etc. Served directly at runtime.      |
-| `public/style.css`           | Global layout styles.                                      |
-| `src/main.ts`                | Application bootstrap.                                     |
-| `src/game`                   | Folder containing the game code.                           |
-| `src/game/main.ts`           | Game entry point: configures and starts the game.          |
-| `src/game/scenes`            | Folder with all Phaser game scenes.                        | 
+| `index.html`                 | Main HTML entry point containing the game container       |
+| `public/assets/`             | Game sprites and static assets (ship.png, favicon, etc.)  |
+| `public/style.css`           | Global layout and UI styles                               |
+| `public/mock-data/`          | Mock YouTube comments data for offline development        |
+| `src/main.ts`                | Application bootstrap and entry point                     |
+| `src/game/`                  | Core game logic and Phaser scenes                         |
+| `src/game/main.ts`           | Game configuration and scene management                    |
+| `src/game/scenes/`           | All Phaser game scenes (Boot, Preloader, MainMenu, Game, GameOver) |
+| `src/services/`              | External service integrations (YouTube API, Service Manager) |
+| `vite/`                      | Vite build configuration files                            |
+
+### Key Game Files
+
+- **`src/game/scenes/Game.ts`**: Main game logic, physics, combat system, and player management
+- **`src/services/YouTubeService.ts`**: Handles fetching YouTube comments and mock data
+- **`src/services/ServiceManager.ts`**: Singleton service container for dependency management
+- **`public/mock-data/youtube-comments.json`**: Sample commenter data for offline play 
 
 
-## Handling Assets
+## 🎨 Asset Management
 
-Vite supports loading assets via JavaScript module `import` statements.
+The game uses Vite's asset handling system for optimal performance:
 
-This template provides support for both embedding assets and also loading them from a static folder. To embed an asset, you can import it at the top of the JavaScript file you are using it in:
-
-```js
+### Embedded Assets
+```typescript
 import logoImg from './assets/logo.png'
+// Use in Phaser: this.load.image('logo', logoImg);
 ```
 
-To load static files such as audio files, videos, etc place them into the `public/assets` folder. Then you can use this path in the Loader calls within Phaser:
+### Static Assets
+Place files in `public/assets/` folder:
+```typescript
+// Loads from public/assets/ship.png
+this.load.image('ship', 'assets/ship.png');
+```
 
-```js
-preload ()
-{
-    //  This is an example of an imported bundled image.
-    //  Remember to import it at the top of this file
-    this.load.image('logo', logoImg);
+Current game assets:
+- `public/assets/ship.png` - Player ship sprite
+- `public/favicon.png` - Browser favicon
+- `public/mock-data/youtube-comments.json` - Mock commenter data
 
-    //  This is an example of loading a static image
-    //  from the public/assets folder:
-    this.load.image('background', 'assets/bg.png');
+## 🚀 Building for Production
+
+```bash
+# Create optimized production build
+npm run build
+
+# Output will be in the dist/ folder
+# Upload entire dist/ folder contents to your web server
+```
+
+The build process:
+- Bundles and minifies all code
+- Optimizes images and assets
+- Generates source maps for debugging
+- Copies static assets to `dist/assets/`
+
+## 🔧 Development Features
+
+### Hot Module Replacement
+Vite provides instant updates during development - edit any file and see changes immediately without losing game state.
+
+### TypeScript Support
+Full TypeScript integration with:
+- Type checking during development
+- IntelliSense and autocompletion
+- Compile-time error detection
+
+### Physics Debugging
+Enable physics debug mode in `src/game/main.ts`:
+```typescript
+physics: {
+  default: "arcade",
+  arcade: {
+    gravity: { x: 0, y: 150 },
+    debug: true, // Shows collision boundaries
+  },
 }
 ```
 
-When you issue the `npm run build` command, all static assets are automatically copied to the `dist/assets` folder.
+## 🎯 Game Design Philosophy
 
-## Deploying to Production
+**Commenters Fight** transforms the often chaotic nature of YouTube comment sections into an entertaining battle royale experience. The game mechanics are designed to be:
 
-After you run the `npm run build` command, your code will be built into a single bundle and saved to the `dist` folder, along with any other assets your project imported, or stored in the public assets folder.
+- **Accessible**: Simple to understand, no complex controls needed
+- **Emergent**: Complex battles arise from simple rules (positioning + timing)
+- **Community-Driven**: Real commenter names create personal investment
+- **Fast-Paced**: Progressive speed increases keep games exciting
+- **Fair**: Grace periods and respawn mechanics ensure everyone gets a chance
 
-In order to deploy your game, you will need to upload *all* of the contents of the `dist` folder to a public facing web server.
+The Joust-inspired combat system rewards positioning and timing over button mashing, making each elimination feel earned rather than random.
 
-## Customizing the Template
+## 🛠️ Customization
 
-### Vite
+### Game Parameters
 
-If you want to customize your build, such as adding plugin (i.e. for loading CSS or fonts), you can modify the `vite/config.*.mjs` file for cross-project changes, or you can modify and/or create new configuration files and target them in specific npm tasks inside of `package.json`. Please see the [Vite documentation](https://vitejs.dev/) for more information.
+Easily adjust game mechanics in `src/game/scenes/Game.ts`:
 
-## About log.js
+```typescript
+// Grace period duration (ms)
+private readonly gracePeriodMs: number = 3000;
 
-If you inspect our node scripts you will see there is a file called `log.js`. This file makes a single silent API call to a domain called `gryzor.co`. This domain is owned by Phaser Studio Inc. The domain name is a homage to one of our favorite retro games.
+// Speed boost threshold (players remaining)
+const baseSpeedMultiplier = activePlayers < 8 ? 1.5 : 1.0;
 
-We send the following 3 pieces of data to this API: The name of the template being used (vue, react, etc). If the build was 'dev' or 'prod' and finally the version of Phaser being used.
+// Progressive speed boost timing (ms)
+if (timeSinceLastBoost >= 10000) // 10 seconds
 
-At no point is any personal data collected or sent. We don't know about your project files, device, browser or anything else. Feel free to inspect the `log.js` file to confirm this.
-
-Why do we do this? Because being open source means we have no visible metrics about which of our templates are being used. We work hard to maintain a large and diverse set of templates for Phaser developers and this is our small anonymous way to determine if that work is actually paying off, or not. In short, it helps us ensure we're building the tools for you.
-
-However, if you don't want to send any data, you can use these commands instead:
-
-Dev:
-
-```bash
-npm run dev-nolog
+// Physics settings
+physics: {
+  arcade: {
+    gravity: { x: 0, y: 150 }, // Adjust gravity
+  }
+}
 ```
 
-Build:
+### Adding New Player Colors
 
-```bash
-npm run build-nolog
+Expand the color palette in `createBoxes()`:
+```typescript
+const colors = [
+  0xff6b6b, 0x4ecdc4, 0x45b7d1, // Add more hex colors
+  // Your custom colors here...
+];
 ```
 
-Or, to disable the log entirely, simply delete the file `log.js` and remove the call to it in the `scripts` section of `package.json`:
+### Vite Configuration
 
-Before:
+Modify build settings in `vite/config.*.mjs` files for:
+- Custom plugins (CSS preprocessors, additional file loaders)
+- Development server settings (port, host, HTTPS)
+- Build optimization options
+
+See the [Vite documentation](https://vitejs.dev/) for comprehensive configuration options.
+
+## 📊 Analytics & Logging
+
+The project includes optional anonymous analytics via `log.js` that sends minimal usage data to help improve the Phaser template ecosystem.
+
+**Data Sent:**
+- Template type (typescript)
+- Build type (dev/prod) 
+- Phaser version
+
+**No personal data** is collected - no file contents, device info, or user identification.
+
+### Disable Analytics
+
+Use the `-nolog` commands:
+```bash
+npm run dev-nolog    # Development without analytics
+npm run build-nolog  # Production build without analytics
+```
+
+Or remove analytics entirely by deleting `log.js` and updating `package.json`:
 
 ```json
-"scripts": {
-    "dev": "node log.js dev & dev-template-script",
-    "build": "node log.js build & build-template-script"
-},
+{
+  "scripts": {
+    "dev": "vite --config vite/config.dev.mjs",
+    "build": "vite build --config vite/config.prod.mjs"
+  }
+}
 ```
 
-After:
+## 🤝 Contributing
 
-```json
-"scripts": {
-    "dev": "dev-template-script",
-    "build": "build-template-script"
-},
-```
+This project is built on the Phaser community template. Improvements and suggestions are welcome!
 
-Either of these will stop `log.js` from running. If you do decide to do this, please could you at least join our Discord and tell us which template you're using! Or send us a quick email. Either will be super-helpful, thank you.
+### Development Workflow
 
-## Join the Phaser Community!
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes and test thoroughly
+4. Commit your changes: `git commit -m 'Add amazing feature'`
+5. Push to the branch: `git push origin feature/amazing-feature`
+6. Open a Pull Request
 
-We love to see what developers like you create with Phaser! It really motivates us to keep improving. So please join our community and show-off your work 😄
+### Ideas for Contributions
+
+- **New Combat Mechanics**: Special abilities, power-ups, different player types
+- **Visual Improvements**: Particle effects, better sprites, UI enhancements
+- **Audio**: Sound effects, background music, audio feedback
+- **Multiplayer**: Real-time multiplayer battles
+- **Mobile Support**: Touch controls and responsive design improvements
+- **Tournament Mode**: Bracket-style competitions, advanced scoring
+
+## 🎮 Community & Support
+
+**Commenters Fight** is built with Phaser 3! Join the amazing Phaser community:
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
-**Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
+**Play:** Games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
 **Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum](https://phaser.discourse.group/) and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
 **Code:** 2000+ [Examples](https://labs.phaser.io)<br />
 **Read:** The [Phaser World](https://phaser.io/community/newsletter) Newsletter<br />
+
+## 🏆 Game Inspiration
+
+This game draws inspiration from:
+- **Joust (1982)**: Classic arcade combat mechanics
+- **Battle Royale**: Last-player-standing gameplay
+- **Flappy Bird**: Simple but engaging flight mechanics
+- **YouTube Comments**: The chaotic energy of comment sections
+
+## 📝 License
 
 Created by [Phaser Studio](mailto:support@phaser.io). Powered by coffee, anime, pixels and love.
 
 The Phaser logo and characters are &copy; 2011 - 2025 Phaser Studio Inc.
 
 All rights reserved.
+
+---
+
+**Ready to watch commenters battle it out? Start the game and let the chaos begin! 🥊⚡**
