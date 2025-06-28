@@ -266,13 +266,7 @@ export class Game extends Scene {
   }
 
   createBoxes() {
-    // First create a simple white box texture
-    const graphics = this.add.graphics();
-    graphics.fillStyle(0xffffff);
-    graphics.fillRect(0, 0, 40, 40);
-    graphics.generateTexture("box", 40, 40);
-    graphics.destroy();
-
+    // No need to create a box texture - we'll use the ship sprite instead
     const colors = [
       0xff6b6b, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xfeca57, 0xff9ff3, 0x54a0ff,
       0x2ed573, 0xff6348, 0x1dd1a1, 0x7f8c8d, 0xf39c12, 0x8e44ad, 0xe74c3c,
@@ -304,8 +298,8 @@ export class Game extends Scene {
         centerY + spawnRadius
       );
 
-      // Create a physics-enabled image
-      const box = this.physics.add.image(x, y, "box");
+      // Create a physics-enabled image using the ship sprite
+      const box = this.physics.add.image(x, y, "ship");
 
       // Set random color tint
       box.setTint(Phaser.Math.RND.pick(colors));
@@ -343,7 +337,7 @@ export class Game extends Scene {
       box.setData("nextDirectionChange", Phaser.Math.Between(3000, 8000)); // Change direction every 3-8 seconds
       box.setData("lastDirectionChange", 0);
 
-      // Add to the boxes group
+      // Add to the ships group
       this.boxes.add(box);
     }
   }
@@ -539,9 +533,9 @@ export class Game extends Scene {
           physicsBox.setData("nextFlapTime", flapInterval);
         }
 
-        // Screen wrapping logic - teleport to opposite side when half the box is off the camera view
+        // Screen wrapping logic - teleport to opposite side when half the ship is off the camera view
         const camera = this.cameras.main;
-        const halfBoxSize = 20; // Half of box size (40/2)
+        const halfSpriteSize = 20; // Approximate half size of ship sprite
 
         // Get camera bounds (visible area)
         const leftBound = camera.scrollX;
@@ -550,17 +544,17 @@ export class Game extends Scene {
         const bottomBound = camera.scrollY + camera.height;
 
         // Horizontal wrapping (based on camera view)
-        if (physicsBox.x > rightBound + halfBoxSize) {
-          physicsBox.x = leftBound - halfBoxSize; // Teleport to left side of camera view
-        } else if (physicsBox.x < leftBound - halfBoxSize) {
-          physicsBox.x = rightBound + halfBoxSize; // Teleport to right side of camera view
+        if (physicsBox.x > rightBound + halfSpriteSize) {
+          physicsBox.x = leftBound - halfSpriteSize; // Teleport to left side of camera view
+        } else if (physicsBox.x < leftBound - halfSpriteSize) {
+          physicsBox.x = rightBound + halfSpriteSize; // Teleport to right side of camera view
         }
 
         // Vertical wrapping (based on camera view)
-        if (physicsBox.y > bottomBound + halfBoxSize) {
-          physicsBox.y = topBound - halfBoxSize; // Teleport to top of camera view
-        } else if (physicsBox.y < topBound - halfBoxSize) {
-          physicsBox.y = bottomBound + halfBoxSize; // Teleport to bottom of camera view
+        if (physicsBox.y > bottomBound + halfSpriteSize) {
+          physicsBox.y = topBound - halfSpriteSize; // Teleport to top of camera view
+        } else if (physicsBox.y < topBound - halfSpriteSize) {
+          physicsBox.y = bottomBound + halfSpriteSize; // Teleport to bottom of camera view
         }
       });
     }
@@ -814,7 +808,7 @@ export class Game extends Scene {
       console.log(`✅ Name text destroyed for ${playerName}`);
     }
 
-    // Remove the player from the boxes group and destroy it
+    // Remove the player from the ships group and destroy it
     this.boxes.remove(player, true, true); // remove, destroyChild, removeCallback
     console.log(`✅ Player removed from physics group: ${playerName}`);
 
@@ -960,8 +954,8 @@ export class Game extends Scene {
       attempts++;
     } while (this.isLocationOccupied(x, y, 80) && attempts < 10);
 
-    // Create the new player box
-    const box = this.physics.add.image(x, y, "box");
+    // Create the new player using ship sprite
+    const box = this.physics.add.image(x, y, "ship");
 
     const colors = [
       0xff6b6b, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xfeca57, 0xff9ff3, 0x54a0ff,

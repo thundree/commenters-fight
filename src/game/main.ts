@@ -13,6 +13,9 @@ const config: Phaser.Types.Core.GameConfig = {
   height: window.innerHeight,
   parent: "game-container",
   backgroundColor: "#028af8",
+  render: {
+    pixelArt: true, // Enable pixel-perfect rendering for crisp sprites
+  },
   scale: {
     mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
