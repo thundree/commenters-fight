@@ -11,6 +11,7 @@ import {
   CameraController,
   RespawnManager,
 } from "../managers";
+import { getGameDimensions } from "../constants/GameDimensions";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -48,8 +49,9 @@ export class Game extends Scene {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x2c3e50);
 
-    // Set up physics world bounds (larger than screen for camera movement)
-    this.physics.world.setBounds(0, 0, 2048, 1536);
+    // Set up physics world bounds using dynamic dimensions
+    const { worldWidth, worldHeight } = getGameDimensions();
+    this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
 
     // Create a group for our boxes
     this.boxes = this.physics.add.group();

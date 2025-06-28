@@ -6,6 +6,7 @@ import { PlatformConfigurator } from "./scenes/PlatformConfigurator";
 import { PlatformTest } from "./scenes/PlatformTest";
 import { AUTO, Game } from "phaser";
 import { Preloader } from "./scenes/Preloader";
+import { refreshPlatformConfigs } from "./constants/PlatformConfigs";
 
 //  Find out more information about the Game Config at:
 //  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
@@ -41,7 +42,15 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 const StartGame = (parent: string) => {
-  return new Game({ ...config, parent });
+  const game = new Game({ ...config, parent });
+
+  // Handle window resize events to refresh platform configurations
+  window.addEventListener("resize", () => {
+    // Refresh platform configs when window is resized
+    refreshPlatformConfigs();
+  });
+
+  return game;
 };
 
 export default StartGame;

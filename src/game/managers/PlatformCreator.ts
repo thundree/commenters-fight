@@ -1,4 +1,9 @@
 import { PlatformManager } from "../Platform";
+import {
+  getGameDimensions,
+  getPlatformSizes,
+  PLATFORM_LAYERS,
+} from "../constants/GameDimensions";
 
 export class PlatformCreator {
   private readonly platformManager: PlatformManager;
@@ -8,7 +13,7 @@ export class PlatformCreator {
   }
 
   createGamePlatforms(): void {
-    const worldHeight = 1536;
+    const { worldHeight } = getGameDimensions();
 
     // Bottom platforms (ground level)
     this.createBottomPlatforms(worldHeight);
@@ -31,16 +36,31 @@ export class PlatformCreator {
     // Special custom platforms
     this.createSpecialPlatforms(worldHeight);
 
-    console.log("Created strategic platform layout across the world");
+    console.log(
+      `Created strategic platform layout across the world (${worldHeight}h)`
+    );
   }
 
   private createBottomPlatforms(worldHeight: number): void {
-    this.platformManager.createPlatform(150, worldHeight - 80, 0);
-    this.platformManager.createPlatform(500, worldHeight - 80, 1);
-    this.platformManager.createPlatform(850, worldHeight - 80, 2);
-    this.platformManager.createPlatform(1200, worldHeight - 80, 3);
-    this.platformManager.createPlatform(1550, worldHeight - 80, 4);
-    this.platformManager.createPlatform(1850, worldHeight - 80, 2);
+    // Use responsive positioning based on percentage of world width
+    const positions = [
+      { x: 0.075, y: worldHeight - worldHeight * PLATFORM_LAYERS.ground }, // 7.5% from left
+      { x: 0.25, y: worldHeight - worldHeight * PLATFORM_LAYERS.ground }, // 25% from left
+      { x: 0.425, y: worldHeight - worldHeight * PLATFORM_LAYERS.ground }, // 42.5% from left
+      { x: 0.6, y: worldHeight - worldHeight * PLATFORM_LAYERS.ground }, // 60% from left
+      { x: 0.775, y: worldHeight - worldHeight * PLATFORM_LAYERS.ground }, // 77.5% from left
+      { x: 0.925, y: worldHeight - worldHeight * PLATFORM_LAYERS.ground }, // 92.5% from left
+    ];
+
+    const { worldWidth } = getGameDimensions();
+
+    positions.forEach((pos, index) => {
+      this.platformManager.createPlatform(
+        pos.x * worldWidth,
+        pos.y,
+        index % 5 // Cycle through platform types
+      );
+    });
   }
 
   private createLowerMidPlatforms(worldHeight: number): void {
@@ -89,17 +109,24 @@ export class PlatformCreator {
     this.platformManager.createPlatform(1000, worldHeight - 1200, 3); // Wooden Platform
     this.platformManager.createPlatform(500, worldHeight - 1150, 4); // Bridge Platform
 
-    // Create a custom golden platform using Platform 1 as base
-    this.platformManager.createCustomPlatform(1500, worldHeight - 1180, {
-      name: "Golden Platform",
-      cropX: 80, // Same as Platform 1
-      cropY: 0,
-      cropWidth: 90,
-      cropHeight: 18,
-      displayWidth: 300,
-      displayHeight: 40,
-      tint: 0xffd700, // Gold tint
-      solid: true,
-    });
+    // Create a custom golden platform using Platform 1 as base with dynamic sizing
+    const { worldWidth } = getGameDimensions();
+    const platformSizes = getPlatformSizes();
+
+    this.platformManager.createCustomPlatform(
+      Math.min(1500, worldWidth * 0.75),
+      worldHeight - 1180,
+      {
+        name: "Golden Platform",
+        cropX: 80, // Same as Platform 1
+        cropY: 0,
+        cropWidth: 90,
+        cropHeight: 18,
+        displayWidth: platformSizes.extraLarge.width,
+        displayHeight: platformSizes.medium.height,
+        tint: 0xffd700, // Gold tint
+        solid: true,
+      }
+    );
   }
 }

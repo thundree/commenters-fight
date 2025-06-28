@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { getSpriteViewerDimensions } from "../constants/GameDimensions";
 import { PlatformConfig } from "../Platform";
 import { PLATFORM_CONFIGS } from "../constants/PlatformConfigs";
 
@@ -127,7 +128,8 @@ export class PlatformConfigurator extends Scene {
   }
 
   private createFullSpriteViewer(fullWidth: number, fullHeight: number): void {
-    const scale = Math.min(800 / fullWidth, 400 / fullHeight); // Doubled from 400/200 to 800/400
+    const { maxWidth, maxHeight } = getSpriteViewerDimensions();
+    const scale = Math.min(maxWidth / fullWidth, maxHeight / fullHeight);
     const displayWidth = fullWidth * scale;
     const displayHeight = fullHeight * scale;
 
@@ -267,7 +269,8 @@ export class PlatformConfigurator extends Scene {
 
   private createPlatformPreview(): void {
     const previewX = this.cameras.main.width / 2;
-    const previewY = 400;
+    const { previewWidth, previewHeight } = getSpriteViewerDimensions();
+    const previewY = this.cameras.main.height - previewHeight - 100;
 
     this.add
       .text(previewX, previewY - 50, "🎯 Platform Preview", {
@@ -278,9 +281,16 @@ export class PlatformConfigurator extends Scene {
       .setOrigin(0.5);
 
     // Preview area background
-    this.add.rectangle(previewX, previewY, 300, 100, 0x16213e, 0.8);
+    this.add.rectangle(
+      previewX,
+      previewY,
+      previewWidth,
+      previewHeight,
+      0x16213e,
+      0.8
+    );
     this.add
-      .rectangle(previewX, previewY, 300, 100, 0x00ffff, 0)
+      .rectangle(previewX, previewY, previewWidth, previewHeight, 0x00ffff, 0)
       .setStrokeStyle(2, 0x00ffff);
 
     // This will be updated when platform is selected
@@ -331,7 +341,8 @@ export class PlatformConfigurator extends Scene {
     const texture = this.textures.get("joust-sprites");
     const fullWidth = texture.source[0].width;
     const fullHeight = texture.source[0].height;
-    const scale = Math.min(800 / fullWidth, 400 / fullHeight); // Doubled from 400/200 to 800/400
+    const { maxWidth, maxHeight } = getSpriteViewerDimensions();
+    const scale = Math.min(maxWidth / fullWidth, maxHeight / fullHeight);
 
     // Update selection rectangle on full sprite
     const displayWidth = fullWidth * scale;

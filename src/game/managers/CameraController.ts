@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { getGameDimensions } from "../constants/GameDimensions";
 
 export class CameraController {
   private readonly scene: Scene;
@@ -28,8 +29,9 @@ export class CameraController {
       controlConfig
     );
 
-    // Set camera bounds to match world bounds
-    this.scene.cameras.main.setBounds(0, 0, 2048, 1536);
+    // Set camera bounds to match dynamic world bounds
+    const { worldWidth, worldHeight } = getGameDimensions();
+    this.scene.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
   }
 
   update(delta: number): void {
