@@ -1,8 +1,6 @@
 import { Scene } from "phaser";
 import { PlatformManager } from "../Platform";
-import {
-  YouTubeCommentsResponse,
-} from "../../services/YouTubeService";
+import { YouTubeCommentsResponse } from "../../services/YouTubeService";
 import {
   PlayerManager,
   GameStateManager,
@@ -17,7 +15,7 @@ import {
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   boxes: Phaser.Physics.Arcade.Group;
-  
+
   // Managers
   private playerManager!: PlayerManager; // Will be initialized in create()
   private readonly gameStateManager: GameStateManager;
@@ -27,13 +25,13 @@ export class Game extends Scene {
   private platformCreator!: PlatformCreator; // Will be initialized in create()
   private readonly cameraController: CameraController;
   private readonly respawnManager: RespawnManager;
-  
+
   // Platform manager (existing)
   private platformManager!: PlatformManager; // Will be initialized in create()
 
   constructor() {
     super("Game");
-    
+
     // Initialize managers
     this.gameStateManager = new GameStateManager(this);
     this.collisionManager = new CollisionManager();
@@ -41,8 +39,8 @@ export class Game extends Scene {
     this.commentDataManager = new CommentDataManager();
     this.cameraController = new CameraController(this);
     this.respawnManager = new RespawnManager();
-    
-    // Note: playerManager and platformCreator will be initialized after create() 
+
+    // Note: playerManager and platformCreator will be initialized after create()
     // when we have the required dependencies
   }
 
@@ -68,7 +66,9 @@ export class Game extends Scene {
     let youtubeNames: string[] = [];
     if (data?.commentsData) {
       console.log("Using passed comments data from MainMenu");
-      youtubeNames = this.commentDataManager.extractNamesFromCommentsData(data.commentsData);
+      youtubeNames = this.commentDataManager.extractNamesFromCommentsData(
+        data.commentsData
+      );
     } else {
       console.log("No comments data passed, fetching from YouTube service");
       youtubeNames = await this.commentDataManager.fetchYouTubeNames();
@@ -117,7 +117,8 @@ export class Game extends Scene {
 
     // Calculate speed multiplier based on remaining players
     const activePlayers = this.playerManager.getActivePlayerCount();
-    const speedMultiplier = this.speedManager.calculateSpeedMultiplier(activePlayers);
+    const speedMultiplier =
+      this.speedManager.calculateSpeedMultiplier(activePlayers);
 
     // Update player movement
     this.playerManager.updatePlayerMovement(time, speedMultiplier);
@@ -125,7 +126,8 @@ export class Game extends Scene {
     // Update score display with active players
     const activePlayerNames = new Set(
       this.boxes.children.entries.map(
-        (box) => (box as Phaser.Physics.Arcade.Image).getData("playerName") as string
+        (box) =>
+          (box as Phaser.Physics.Arcade.Image).getData("playerName") as string
       )
     );
     this.gameStateManager.updateScoreDisplay(activePlayerNames);
@@ -136,7 +138,8 @@ export class Game extends Scene {
 
   private checkAndRespawnPlayers(): void {
     const activePlayers = this.playerManager.getActivePlayerCount();
-    const totalAvailablePlayers = this.playerManager.getTotalAvailablePlayerCount();
+    const totalAvailablePlayers =
+      this.playerManager.getTotalAvailablePlayerCount();
 
     this.respawnManager.checkAndRespawnPlayers(
       activePlayers,
@@ -145,8 +148,10 @@ export class Game extends Scene {
       this.playerManager,
       (winnerName: string) => {
         // Get the actual winner name from the remaining player
-        const remainingPlayer = this.boxes.children.entries[0] as Phaser.Physics.Arcade.Image;
-        const actualWinnerName = remainingPlayer?.getData("playerName") ?? winnerName;
+        const remainingPlayer = this.boxes.children
+          .entries[0] as Phaser.Physics.Arcade.Image;
+        const actualWinnerName =
+          remainingPlayer?.getData("playerName") ?? winnerName;
         this.gameStateManager.announceWinner(actualWinnerName);
       }
     );

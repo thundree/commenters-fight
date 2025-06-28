@@ -14,7 +14,7 @@ export class RespawnManager {
       if (!gameStateManager.isWinnerAnnounced()) {
         // Get the winner's name from the remaining player
         const winnerName = "Winner"; // This will be properly implemented in integration
-        
+
         console.log(`🏆 LAST PLAYER STANDING! ${winnerName} wins this round!`);
         onWinnerAnnounced(winnerName);
         return;
@@ -22,8 +22,10 @@ export class RespawnManager {
 
       // Check if enough time has passed since winner announcement
       if (gameStateManager.shouldRespawnAfterWinner()) {
-        console.log("✅ 3 seconds passed! Respawning all players after winner announcement...");
-        
+        console.log(
+          "✅ 3 seconds passed! Respawning all players after winner announcement..."
+        );
+
         gameStateManager.hideWinnerAnnouncement();
         gameStateManager.resetGameState();
 
@@ -41,7 +43,9 @@ export class RespawnManager {
         console.log(`⏳ Still waiting... ${waitTime.toFixed(0)}ms remaining`);
       }
     } else if (activePlayers <= 1 && totalAvailablePlayers === 1) {
-      console.log("🎯 Only ElodineCodes available - game continues with single player");
+      console.log(
+        "🎯 Only ElodineCodes available - game continues with single player"
+      );
     }
   }
 }

@@ -24,7 +24,9 @@ export class CameraController {
       maxSpeed: 1.0,
     };
 
-    this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+    this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(
+      controlConfig
+    );
 
     // Set camera bounds to match world bounds
     this.scene.cameras.main.setBounds(0, 0, 2048, 1536);

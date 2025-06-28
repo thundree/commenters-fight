@@ -1,5 +1,4 @@
 export class CollisionManager {
-
   /**
    * Handle collision between two players with Joust-style logic
    */
@@ -7,7 +6,10 @@ export class CollisionManager {
     player1: Phaser.Physics.Arcade.Image,
     player2: Phaser.Physics.Arcade.Image,
     isGracePeriodActive: boolean,
-    onPlayerEliminated: (winner: string, loser: Phaser.Physics.Arcade.Image) => void
+    onPlayerEliminated: (
+      winner: string,
+      loser: Phaser.Physics.Arcade.Image
+    ) => void
   ): void {
     if (!player1.body || !player2.body) return;
 
@@ -43,9 +45,13 @@ export class CollisionManager {
 
     // Determine winner based on position
     const result = this.determineCollisionWinner(player1, player2);
-    
+
     if (result.winner && result.loser) {
-      console.log(`🏆 ${result.winner} STOMPED ${result.loser.getData("playerName")}! Player eliminated!`);
+      console.log(
+        `🏆 ${result.winner} STOMPED ${result.loser.getData(
+          "playerName"
+        )}! Player eliminated!`
+      );
       onPlayerEliminated(result.winner, result.loser);
 
       // Give the winner a slight upward boost as feedback
@@ -80,10 +86,18 @@ export class CollisionManager {
     const player2Top = player2.y - player2.height / 2;
 
     console.log(
-      `Player positions - ${player1Name}: y=${player1.y.toFixed(1)}, top=${player1Top.toFixed(1)}, vel.y=${player1.body?.velocity.y.toFixed(1) ?? 0}`
+      `Player positions - ${player1Name}: y=${player1.y.toFixed(
+        1
+      )}, top=${player1Top.toFixed(1)}, vel.y=${
+        player1.body?.velocity.y.toFixed(1) ?? 0
+      }`
     );
     console.log(
-      `Player positions - ${player2Name}: y=${player2.y.toFixed(1)}, top=${player2Top.toFixed(1)}, vel.y=${player2.body?.velocity.y.toFixed(1) ?? 0}`
+      `Player positions - ${player2Name}: y=${player2.y.toFixed(
+        1
+      )}, top=${player2Top.toFixed(1)}, vel.y=${
+        player2.body?.velocity.y.toFixed(1) ?? 0
+      }`
     );
 
     const verticalThreshold = 10;
@@ -91,19 +105,25 @@ export class CollisionManager {
     if (player1Top < player2Top - verticalThreshold) {
       // Player 1 is above Player 2
       console.log(
-        `✅ POSITION STOMP! ${player1Name} is above ${player2Name} by ${(player2Top - player1Top).toFixed(1)}px`
+        `✅ POSITION STOMP! ${player1Name} is above ${player2Name} by ${(
+          player2Top - player1Top
+        ).toFixed(1)}px`
       );
       return { winner: player1Name, loser: player2 };
     } else if (player2Top < player1Top - verticalThreshold) {
       // Player 2 is above Player 1
       console.log(
-        `✅ POSITION STOMP! ${player2Name} is above ${player1Name} by ${(player1Top - player2Top).toFixed(1)}px`
+        `✅ POSITION STOMP! ${player2Name} is above ${player1Name} by ${(
+          player1Top - player2Top
+        ).toFixed(1)}px`
       );
       return { winner: player2Name, loser: player1 };
     }
 
     console.log(
-      `↔️ SIDE COLLISION - no clear height advantage (diff: ${Math.abs(player1Top - player2Top).toFixed(1)}px)`
+      `↔️ SIDE COLLISION - no clear height advantage (diff: ${Math.abs(
+        player1Top - player2Top
+      ).toFixed(1)}px)`
     );
     return { winner: null, loser: null };
   }

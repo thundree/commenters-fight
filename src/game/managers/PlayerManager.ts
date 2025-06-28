@@ -80,7 +80,12 @@ export class PlayerManager {
     }
   }
 
-  createPlayer(x: number, y: number, playerName: string, colors: number[]): Phaser.Physics.Arcade.Image {
+  createPlayer(
+    x: number,
+    y: number,
+    playerName: string,
+    colors: number[]
+  ): Phaser.Physics.Arcade.Image {
     const box = this.scene.physics.add.image(x, y, "ship");
     box.setScale(2);
     box.setBounce(0.3);
@@ -129,12 +134,16 @@ export class PlayerManager {
     );
 
     if (availableNames.length === 0) {
-      console.log("No available names to spawn - all players are already active");
+      console.log(
+        "No available names to spawn - all players are already active"
+      );
       return;
     }
 
     const playerName = Phaser.Math.RND.pick(availableNames);
-    console.log(`Spawning available player: ${playerName} (${availableNames.length} names available)`);
+    console.log(
+      `Spawning available player: ${playerName} (${availableNames.length} names available)`
+    );
 
     const centerX = this.scene.cameras.main.width / 2;
     const centerY = this.scene.cameras.main.height / 2;
@@ -181,12 +190,19 @@ export class PlayerManager {
       if (!physicsBox.body) return;
 
       // Update name text position
-      const nameText = physicsBox.getData("nameText") as Phaser.GameObjects.Text;
+      const nameText = physicsBox.getData(
+        "nameText"
+      ) as Phaser.GameObjects.Text;
       if (nameText) {
         nameText.setPosition(physicsBox.x, physicsBox.y - 30);
       }
 
-      this.handlePlayerMovement(physicsBox, time, speedMultiplier, activePlayers);
+      this.handlePlayerMovement(
+        physicsBox,
+        time,
+        speedMultiplier,
+        activePlayers
+      );
       this.handleScreenWrapping(physicsBox);
     });
   }
@@ -201,7 +217,8 @@ export class PlayerManager {
     const lastFlapTime = physicsBox.getData("lastFlapTime") ?? 0;
     const baseHorizontalSpeed = physicsBox.getData("horizontalSpeed") ?? 75;
     const direction = physicsBox.getData("direction") ?? 1;
-    const nextDirectionChange = physicsBox.getData("nextDirectionChange") ?? 5000;
+    const nextDirectionChange =
+      physicsBox.getData("nextDirectionChange") ?? 5000;
     const lastDirectionChange = physicsBox.getData("lastDirectionChange") ?? 0;
 
     const horizontalSpeed = baseHorizontalSpeed * speedMultiplier;
@@ -209,9 +226,10 @@ export class PlayerManager {
     physicsBox.setVelocity(horizontalSpeed * direction, currentVelY);
 
     // Handle direction changes
-    const directionChangeInterval = activePlayers < 8
-      ? Phaser.Math.Between(2000, 5000)
-      : Phaser.Math.Between(3000, 8000);
+    const directionChangeInterval =
+      activePlayers < 8
+        ? Phaser.Math.Between(2000, 5000)
+        : Phaser.Math.Between(3000, 8000);
 
     if (time - lastDirectionChange > nextDirectionChange) {
       const newDirection = Phaser.Math.RND.pick([-1, 1]);
@@ -224,9 +242,10 @@ export class PlayerManager {
     }
 
     // Handle flapping
-    const flapInterval = activePlayers < 8
-      ? Phaser.Math.Between(1000, 2500)
-      : Phaser.Math.Between(1500, 4000);
+    const flapInterval =
+      activePlayers < 8
+        ? Phaser.Math.Between(1000, 2500)
+        : Phaser.Math.Between(1500, 4000);
 
     if (time - lastFlapTime > nextFlapTime) {
       const currentVelX = physicsBox.body?.velocity.x ?? 0;
@@ -262,10 +281,19 @@ export class PlayerManager {
     }
   }
 
-  private isLocationOccupied(x: number, y: number, minDistance: number): boolean {
+  private isLocationOccupied(
+    x: number,
+    y: number,
+    minDistance: number
+  ): boolean {
     return this.boxes.children.entries.some((box) => {
       const playerBox = box as Phaser.Physics.Arcade.Image;
-      const distance = Phaser.Math.Distance.Between(x, y, playerBox.x, playerBox.y);
+      const distance = Phaser.Math.Distance.Between(
+        x,
+        y,
+        playerBox.x,
+        playerBox.y
+      );
       return distance < minDistance;
     });
   }

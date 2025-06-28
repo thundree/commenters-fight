@@ -7,7 +7,7 @@ export class GameStateManager {
   private gracePeriodText: Phaser.GameObjects.Text;
   private fightText: Phaser.GameObjects.Text;
   private winnerText: Phaser.GameObjects.Text;
-  
+
   private gameStartTime: number = 0;
   private readonly gracePeriodMs: number = 3000;
   private gracePeriodLogged: boolean = false;
@@ -56,13 +56,18 @@ export class GameStateManager {
 
     // Add grace period indicator text
     this.gracePeriodText = this.scene.add
-      .text(this.scene.cameras.main.width / 2, 100, "⚡ GRACE PERIOD ACTIVE ⚡", {
-        fontFamily: "Arial",
-        fontSize: 20,
-        color: "#ffffff",
-        backgroundColor: "#ff0000",
-        padding: { x: 12, y: 8 },
-      })
+      .text(
+        this.scene.cameras.main.width / 2,
+        100,
+        "⚡ GRACE PERIOD ACTIVE ⚡",
+        {
+          fontFamily: "Arial",
+          fontSize: 20,
+          color: "#ffffff",
+          backgroundColor: "#ff0000",
+          padding: { x: 12, y: 8 },
+        }
+      )
       .setOrigin(0.5)
       .setZ(20)
       .setScrollFactor(0)
@@ -86,15 +91,20 @@ export class GameStateManager {
 
     // Add winner announcement text (hidden initially)
     this.winnerText = this.scene.add
-      .text(this.scene.cameras.main.width / 2, this.scene.cameras.main.height / 2, "", {
-        fontFamily: "Arial",
-        fontSize: 48,
-        color: "#ffff00",
-        backgroundColor: "#000000",
-        padding: { x: 20, y: 16 },
-        stroke: "#ff0000",
-        strokeThickness: 4,
-      })
+      .text(
+        this.scene.cameras.main.width / 2,
+        this.scene.cameras.main.height / 2,
+        "",
+        {
+          fontFamily: "Arial",
+          fontSize: 48,
+          color: "#ffff00",
+          backgroundColor: "#000000",
+          padding: { x: 20, y: 16 },
+          stroke: "#ff0000",
+          strokeThickness: 4,
+        }
+      )
       .setOrigin(0.5)
       .setZ(30)
       .setScrollFactor(0)
@@ -106,7 +116,12 @@ export class GameStateManager {
     playerNames.forEach((name) => {
       this.scores.set(name, 0);
     });
-    console.log("Initialized scores for", this.scores.size, "players:", Array.from(this.scores.keys()));
+    console.log(
+      "Initialized scores for",
+      this.scores.size,
+      "players:",
+      Array.from(this.scores.keys())
+    );
   }
 
   updatePlayerScore(playerName: string, points: number): void {
@@ -159,7 +174,9 @@ export class GameStateManager {
     this.gracePeriodLogged = false;
     this.fightMessageLogged = false;
     this.winnerAnnounced = false;
-    console.log("⏰ GRACE PERIOD RESET: 3 seconds of protection for all players");
+    console.log(
+      "⏰ GRACE PERIOD RESET: 3 seconds of protection for all players"
+    );
   }
 
   updateGracePeriod(): boolean {
@@ -170,7 +187,9 @@ export class GameStateManager {
       this.gracePeriodText.setVisible(gracePeriodActive);
 
       if (gracePeriodActive) {
-        const remainingTime = Math.ceil((this.gracePeriodMs - timeSinceGameStart) / 1000);
+        const remainingTime = Math.ceil(
+          (this.gracePeriodMs - timeSinceGameStart) / 1000
+        );
         this.gracePeriodText.setText(`⚡ GRACE PERIOD: ${remainingTime}s ⚡`);
       }
     }
@@ -202,7 +221,9 @@ export class GameStateManager {
     if (!this.gracePeriodLogged) {
       const timeSinceGameStart = Date.now() - this.gameStartTime;
       console.log(
-        `⏰ GRACE PERIOD ACTIVE: ${(this.gracePeriodMs - timeSinceGameStart).toFixed(0)}ms remaining - no eliminations allowed`
+        `⏰ GRACE PERIOD ACTIVE: ${(
+          this.gracePeriodMs - timeSinceGameStart
+        ).toFixed(0)}ms remaining - no eliminations allowed`
       );
       this.gracePeriodLogged = true;
     }
@@ -222,13 +243,15 @@ export class GameStateManager {
       this.winnerText.setVisible(true);
       this.winnerAnnounced = true;
       this.winnerAnnounceTime = Date.now();
-      console.log("Winner announcement displayed, waiting 3 seconds before respawn...");
+      console.log(
+        "Winner announcement displayed, waiting 3 seconds before respawn..."
+      );
     }
   }
 
   shouldRespawnAfterWinner(): boolean {
     if (!this.winnerAnnounced) return false;
-    
+
     const timeSinceAnnouncement = Date.now() - this.winnerAnnounceTime;
     return timeSinceAnnouncement >= 3000;
   }

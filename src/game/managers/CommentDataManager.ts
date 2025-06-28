@@ -18,10 +18,8 @@ export class CommentDataManager {
     try {
       console.log("Fetching YouTube commenter names...");
       const youtubeService = this.serviceManager.getYouTubeService();
-      const response: YouTubeCommentsResponse = await youtubeService.getCommentThreads(
-        "dQw4w9WgXcQ",
-        20
-      );
+      const response: YouTubeCommentsResponse =
+        await youtubeService.getCommentThreads("dQw4w9WgXcQ", 20);
 
       console.log("YouTube API response:", response);
       return this.extractNamesFromResponse(response);
@@ -35,7 +33,9 @@ export class CommentDataManager {
   /**
    * Extract commenter names from already-fetched comments data
    */
-  extractNamesFromCommentsData(commentsData: YouTubeCommentsResponse): string[] {
+  extractNamesFromCommentsData(
+    commentsData: YouTubeCommentsResponse
+  ): string[] {
     try {
       console.log("Extracting names from comments data:", commentsData);
       return this.extractNamesFromResponse(commentsData);
@@ -46,12 +46,15 @@ export class CommentDataManager {
     }
   }
 
-  private extractNamesFromResponse(response: YouTubeCommentsResponse): string[] {
+  private extractNamesFromResponse(
+    response: YouTubeCommentsResponse
+  ): string[] {
     const nameSet = new Set<string>();
 
     response.items.forEach((item: CommentThread) => {
       // Add top-level comment author
-      const authorName = item.snippet.topLevelComment.snippet.authorDisplayName?.trim();
+      const authorName =
+        item.snippet.topLevelComment.snippet.authorDisplayName?.trim();
       if (authorName) {
         nameSet.add(authorName);
       }

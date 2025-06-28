@@ -15,10 +15,15 @@ export class SpeedManager {
     const baseSpeedMultiplier = activePlayers < 8 ? 1.5 : 1.0;
 
     // Handle initial speed boost activation
-    if (activePlayers < 8 && baseSpeedMultiplier > 1.0 && !this.speedBoostLogged) {
+    if (
+      activePlayers < 8 &&
+      baseSpeedMultiplier > 1.0 &&
+      !this.speedBoostLogged
+    ) {
       console.log(
         `⚡ SPEED BOOST ACTIVE! ${activePlayers} players remaining, speed increased by ${(
-          (baseSpeedMultiplier - 1) * 100
+          (baseSpeedMultiplier - 1) *
+          100
         ).toFixed(0)}%`
       );
       this.speedBoostLogged = true;
@@ -34,14 +39,18 @@ export class SpeedManager {
     if (this.speedBoostLogged && this.progressiveBoostCount < 8) {
       const timeSinceLastBoost = Date.now() - this.lastProgressiveBoostTime;
 
-      if (timeSinceLastBoost >= 10000) { // 10 seconds
+      if (timeSinceLastBoost >= 10000) {
+        // 10 seconds
         this.progressiveBoostCount++;
         this.progressiveSpeedMultiplier += 0.25; // Add 25% each time
         this.lastProgressiveBoostTime = Date.now();
 
         console.log(
-          `⚡ PROGRESSIVE SPEED BOOST ${this.progressiveBoostCount}/8! Speed now ${(
-            (baseSpeedMultiplier * this.progressiveSpeedMultiplier - 1) * 100
+          `⚡ PROGRESSIVE SPEED BOOST ${
+            this.progressiveBoostCount
+          }/8! Speed now ${(
+            (baseSpeedMultiplier * this.progressiveSpeedMultiplier - 1) *
+            100
           ).toFixed(0)}% faster than normal`
         );
       }
