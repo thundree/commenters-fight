@@ -171,7 +171,7 @@ export class PlatformConfigurator extends Scene {
   }
 
   private createFullSpriteViewer(fullWidth: number, fullHeight: number): void {
-    const scale = Math.min(400 / fullWidth, 200 / fullHeight);
+    const scale = Math.min(800 / fullWidth, 400 / fullHeight); // Doubled from 400/200 to 800/400
     const displayWidth = fullWidth * scale;
     const displayHeight = fullHeight * scale;
 
@@ -375,7 +375,7 @@ export class PlatformConfigurator extends Scene {
     const texture = this.textures.get("joust-sprites");
     const fullWidth = texture.source[0].width;
     const fullHeight = texture.source[0].height;
-    const scale = Math.min(400 / fullWidth, 200 / fullHeight);
+    const scale = Math.min(800 / fullWidth, 400 / fullHeight); // Doubled from 400/200 to 800/400
 
     // Update selection rectangle on full sprite
     const displayWidth = fullWidth * scale;
