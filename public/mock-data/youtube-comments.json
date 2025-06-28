@@ -1,0 +1,252 @@
+{
+  "kind": "youtube#commentThreadListResponse",
+  "etag": "mock-etag-abcd1234",
+  "nextPageToken": "CAUQAA",
+  "pageInfo": {
+    "totalResults": 150,
+    "resultsPerPage": 20
+  },
+  "items": [
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAg",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "This game looks absolutely incredible! The graphics and gameplay mechanics are top-notch. Can't wait to play it!",
+            "authorDisplayName": "PurpleStar (Jess)",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 127,
+            "publishedAt": "2024-12-15T14:32:00Z"
+          }
+        },
+        "totalReplyCount": 5,
+        "canReply": true
+      },
+      "replies": {
+        "comments": [
+          {
+            "snippet": {
+              "textDisplay": "I agree! The art style reminds me of classic arcade games but with a modern twist.",
+              "authorDisplayName": "Gabriel",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 23,
+              "publishedAt": "2024-12-15T15:10:00Z"
+            }
+          },
+          {
+            "snippet": {
+              "textDisplay": "When is the release date? I'm already hyped! 🎮",
+              "authorDisplayName": "Hunter",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 8,
+              "publishedAt": "2024-12-15T16:45:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAh",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "The physics engine looks really smooth! How did you implement the collision detection?",
+            "authorDisplayName": "Ego",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 89,
+            "publishedAt": "2024-12-15T13:22:00Z"
+          }
+        },
+        "totalReplyCount": 2,
+        "canReply": true
+      },
+      "replies": {
+        "comments": [
+          {
+            "snippet": {
+              "textDisplay": "Looks like they're using Phaser.js with Arcade Physics. Great choice for 2D games!",
+              "authorDisplayName": "Charlie",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 34,
+              "publishedAt": "2024-12-15T14:05:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAi",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "This reminds me of the good old days of arcade gaming! Love the nostalgic feel with modern polish.",
+            "authorDisplayName": "Dana",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 156,
+            "publishedAt": "2024-12-15T12:45:00Z"
+          }
+        },
+        "totalReplyCount": 8,
+        "canReply": true
+      },
+      "replies": {
+        "comments": [
+          {
+            "snippet": {
+              "textDisplay": "Same here! This gives me strong Joust vibes but with its own unique twist.",
+              "authorDisplayName": "PurpleStar (Jess)",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 45,
+              "publishedAt": "2024-12-15T13:30:00Z"
+            }
+          },
+          {
+            "snippet": {
+              "textDisplay": "The color palette is perfect! Not too bright, not too dark. Easy on the eyes for long gaming sessions.",
+              "authorDisplayName": "Gabriel",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 17,
+              "publishedAt": "2024-12-15T14:20:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAj",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "Will this be available on mobile platforms? The touch controls could work really well for this type of game.",
+            "authorDisplayName": "Hunter",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 72,
+            "publishedAt": "2024-12-15T11:15:00Z"
+          }
+        },
+        "totalReplyCount": 1,
+        "canReply": true
+      },
+      "replies": {
+        "comments": [
+          {
+            "snippet": {
+              "textDisplay": "Good question! Touch controls would definitely make this accessible to more players.",
+              "authorDisplayName": "Gabriel",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 12,
+              "publishedAt": "2024-12-15T12:00:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAk",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "The sound design is fantastic! The audio really complements the visual style perfectly.",
+            "authorDisplayName": "Ego",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 94,
+            "publishedAt": "2024-12-15T10:30:00Z"
+          }
+        },
+        "totalReplyCount": 3,
+        "canReply": true
+      },
+      "replies": {
+        "comments": [
+          {
+            "snippet": {
+              "textDisplay": "Totally agree! The background music sets the perfect mood for gameplay.",
+              "authorDisplayName": "Dana",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 18,
+              "publishedAt": "2024-12-15T11:45:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAl",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "Love how smooth the animations are! What frame rate are you targeting?",
+            "authorDisplayName": "PurpleStar (Jess)",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 63,
+            "publishedAt": "2024-12-15T09:20:00Z"
+          }
+        },
+        "totalReplyCount": 0,
+        "canReply": true
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAm",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "This looks like it would be perfect for competitive gaming! Any plans for tournaments or leaderboards?",
+            "authorDisplayName": "Gabriel",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 108,
+            "publishedAt": "2024-12-15T08:45:00Z"
+          }
+        },
+        "totalReplyCount": 4,
+        "canReply": true
+      },
+      "replies": {
+        "comments": [
+          {
+            "snippet": {
+              "textDisplay": "Online multiplayer would be amazing for this game!",
+              "authorDisplayName": "Hunter",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 29,
+              "publishedAt": "2024-12-15T09:15:00Z"
+            }
+          },
+          {
+            "snippet": {
+              "textDisplay": "Leaderboards would definitely add replay value!",
+              "authorDisplayName": "Charlie",
+              "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+              "likeCount": 15,
+              "publishedAt": "2024-12-15T10:00:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "UgzKgKOhBgJsLBv5Xrh4AaABAn",
+      "snippet": {
+        "videoId": "dQw4w9WgXcQ",
+        "topLevelComment": {
+          "snippet": {
+            "textDisplay": "The camera work is really well done! Smooth following and nice transitions. Great job on the technical implementation!",
+            "authorDisplayName": "Ego",
+            "authorProfileImageUrl": "https://yt3.ggpht.com/a/default-user=s28-c-k-c0x00ffffff-no-rj",
+            "likeCount": 85,
+            "publishedAt": "2024-12-15T07:30:00Z"
+          }
+        },
+        "totalReplyCount": 2,
+        "canReply": true
+      }
+    }
+  ]
+}
