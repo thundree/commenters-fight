@@ -1,14 +1,25 @@
 import { Scene } from "phaser";
+import {
+  PLATFORM_CONFIGS,
+  getPlatformConfig,
+  getPlatformConfigKeys,
+} from "./constants/PlatformConfigs";
 
 export interface PlatformConfig {
-  /** Which horizontal slice (0-13) to use for this platform variant */
-  sliceIndex: number;
   /** Display name for this platform type */
   name: string;
-  /** Width in pixels (will be scaled to fit slice width) */
-  width: number;
-  /** Height in pixels */
-  height: number;
+  /** Crop X coordinate from sprite sheet */
+  cropX: number;
+  /** Crop Y coordinate from sprite sheet */
+  cropY: number;
+  /** Crop width from sprite sheet */
+  cropWidth: number;
+  /** Crop height from sprite sheet */
+  cropHeight: number;
+  /** Display width in pixels (will be scaled from crop) */
+  displayWidth: number;
+  /** Display height in pixels (will be scaled from crop) */
+  displayHeight: number;
   /** Color tint to apply (optional) */
   tint?: number;
   /** Whether this platform is solid (players can land on it) */
@@ -20,7 +31,7 @@ export class Platform extends Phaser.GameObjects.Image {
   declare body: Phaser.Physics.Arcade.StaticBody;
 
   constructor(scene: Scene, x: number, y: number, config: PlatformConfig) {
-    // Create a basic rectangle for now, we'll add texture slicing later
+    // Create image with joust-sprites texture
     super(scene, x, y, "joust-sprites");
 
     this.config = config;
@@ -28,8 +39,11 @@ export class Platform extends Phaser.GameObjects.Image {
     // Add to scene first
     scene.add.existing(this);
 
-    // Create crop rectangle for the slice
-    this.createCrop(config.sliceIndex);
+    // Set depth to ensure it's visible
+    this.setDepth(1);
+
+    // Create crop rectangle using manual coordinates
+    this.createCrop();
 
     // Force the cropped sprite to stretch to the platform size
     this.stretchToFitPlatform();
@@ -39,17 +53,25 @@ export class Platform extends Phaser.GameObjects.Image {
       this.setTint(config.tint);
     }
 
-    // Add physics AFTER all visual setup is complete
+    // Add physics body AFTER all visual setup is complete
     scene.physics.add.existing(this, true); // true = static body
 
     // Configure physics body to exactly match the visual platform
     if (this.body) {
-      // Set the physics body to exactly match the displayed platform size
-      this.body.setSize(this.displayWidth, this.displayHeight);
+      // Set the physics body size to match the display size (after scaling)
+      this.body.setSize(config.displayWidth, config.displayHeight);
+      // Center the physics body on the sprite (no offset needed since we're already centered)
       this.body.setOffset(0, 0);
 
       console.log(
-        `Platform created: visual=(${this.displayWidth}x${this.displayHeight}), physics=(${this.body.width}x${this.body.height}), pos=(${this.x}, ${this.y})`
+        `Platform "${config.name}" created:`,
+        `\n  Cropped size: ${this.width}x${this.height}`,
+        `\n  Display size: ${this.displayWidth}x${this.displayHeight}`,
+        `\n  Physics: ${this.body.width}x${this.body.height}`,
+        `\n  Position: (${this.x}, ${this.y})`,
+        `\n  Crop: (${config.cropX}, ${config.cropY}, ${config.cropWidth}, ${config.cropHeight})`,
+        `\n  Scale: (${this.scaleX.toFixed(2)}, ${this.scaleY.toFixed(2)})`,
+        `\n  Visible: ${this.visible}, Alpha: ${this.alpha}, Depth: ${this.depth}`
       );
     }
 
@@ -58,8 +80,8 @@ export class Platform extends Phaser.GameObjects.Image {
       scene,
       x,
       y,
-      this.displayWidth,
-      this.displayHeight
+      config.displayWidth,
+      config.displayHeight
     );
   }
 
@@ -76,91 +98,127 @@ export class Platform extends Phaser.GameObjects.Image {
     // Create a thin outline to show the intended platform boundary
     const boundary = scene.add.rectangle(x, y, width, height, 0x000000, 0);
     boundary.setStrokeStyle(2, 0x00ff00, 0.8); // Green outline to match physics body
-    boundary.setDepth(10); // Put boundary above the platform sprite so it's visible
+    boundary.setDepth(-1); // Put boundary BEHIND the platform sprite so it doesn't cover it
   }
 
   /**
    * Force the cropped sprite to stretch to fill the entire platform container
    */
   private stretchToFitPlatform(): void {
-    // Get the actual cropped dimensions
+    // First ensure we have the cropped dimensions
     const croppedWidth = this.width;
     const croppedHeight = this.height;
 
-    // Calculate scale factors to stretch the cropped sprite to platform size
-    const scaleX = this.config.width / croppedWidth;
-    const scaleY = this.config.height / croppedHeight;
+    console.log(
+      `Platform stretch for "${this.config.name}":`,
+      `\n  Original cropped size: ${croppedWidth}x${croppedHeight}`,
+      `\n  Target display size: ${this.config.displayWidth}x${this.config.displayHeight}`
+    );
 
-    // Apply the scale to stretch the sprite
-    this.setScale(scaleX, scaleY);
+    // Method 1: Try setDisplaySize first
+    this.setDisplaySize(this.config.displayWidth, this.config.displayHeight);
+
+    // Method 2: If that doesn't work, calculate and apply scale manually
+    if (
+      this.displayWidth !== this.config.displayWidth ||
+      this.displayHeight !== this.config.displayHeight
+    ) {
+      console.log(`setDisplaySize didn't work, trying manual scaling...`);
+      const scaleX = this.config.displayWidth / croppedWidth;
+      const scaleY = this.config.displayHeight / croppedHeight;
+      this.setScale(scaleX, scaleY);
+    }
 
     console.log(
-      `Platform stretch: cropped=${croppedWidth}x${croppedHeight}, target=${
-        this.config.width
-      }x${this.config.height}, scale=${scaleX.toFixed(2)}x${scaleY.toFixed(2)}`
+      `Platform stretch result:`,
+      `\n  Final display size: ${this.displayWidth}x${this.displayHeight}`,
+      `\n  Final scale: ${this.scaleX.toFixed(2)}x${this.scaleY.toFixed(2)}`
     );
   }
 
   /**
-   * Create a crop rectangle for a specific slice of the joust sprites
-   * Crops the correct 64px slice, then setDisplaySize() stretches it to fit platform
+   * Create a crop rectangle using manual coordinates from the config
+   * Uses the exact crop coordinates specified in the platform configuration
    */
-  private createCrop(sliceIndex: number): void {
+  private createCrop(): void {
     const texture = this.scene.textures.get("joust-sprites");
     if (texture?.source?.[0]) {
       const fullWidth = texture.source[0].width;
       const fullHeight = texture.source[0].height;
 
-      // Correct sprite sheet layout: 14 columns, multiple rows
-      const platformsPerRow = 14;
+      const { cropX, cropY, cropWidth, cropHeight } = this.config;
 
-      // Use fixed 64x64 platform size (standard for joust sprites)
-      const platformWidth = 64;
-      const platformHeight = 64;
-
-      // Calculate which row and column this slice index corresponds to
-      const row = Math.floor(sliceIndex / platformsPerRow);
-      const col = sliceIndex % platformsPerRow;
-
-      const cropX = col * platformWidth;
-      const cropY = row * platformHeight;
+      console.log(
+        `Creating crop for "${this.config.name}": crop(${cropX}, ${cropY}, ${cropWidth}, ${cropHeight}) from texture ${fullWidth}x${fullHeight}`
+      );
 
       // Ensure we don't go beyond texture bounds
       if (
-        cropX + platformWidth <= fullWidth &&
-        cropY + platformHeight <= fullHeight
+        cropX >= 0 &&
+        cropY >= 0 &&
+        cropX + cropWidth <= fullWidth &&
+        cropY + cropHeight <= fullHeight &&
+        cropWidth > 0 &&
+        cropHeight > 0
       ) {
-        // Set crop rectangle for a platform-sized area
-        this.setCrop(cropX, cropY, platformWidth, platformHeight);
+        // Set crop rectangle using manual coordinates
+        this.setCrop(cropX, cropY, cropWidth, cropHeight);
+
+        // Ensure the sprite is visible by setting alpha to 1
+        this.setAlpha(1);
+        this.setVisible(true);
 
         console.log(
-          `Platform slice ${sliceIndex}: crop(${cropX}, ${cropY}, ${platformWidth}, ${platformHeight}) - row=${row}, col=${col} | Full texture: ${fullWidth}x${fullHeight} | Will stretch to: ${this.config.width}x${this.config.height}`
+          `✅ Platform "${this.config.name}" crop successful: (${cropX}, ${cropY}, ${cropWidth}, ${cropHeight})`,
+          `\n  Sprite dimensions after crop: ${this.width}x${this.height}`,
+          `\n  Sprite visible: ${this.visible}, alpha: ${this.alpha}`
         );
       } else {
-        console.warn(
-          `Platform slice ${sliceIndex} out of bounds: crop would be (${cropX}, ${cropY}, ${platformWidth}, ${platformHeight}) but texture is only ${fullWidth}x${fullHeight}`
+        console.error(
+          `❌ Platform "${this.config.name}" crop out of bounds:`,
+          `\n  Requested crop: (${cropX}, ${cropY}, ${cropWidth}, ${cropHeight})`,
+          `\n  Texture bounds: ${fullWidth}x${fullHeight}`,
+          `\n  Using fallback crop (0, 0, 64, 64)`
         );
-        // Fall back to first slice
-        this.setCrop(0, 0, platformWidth, platformHeight);
+        // Fall back to a safe default and make it visible with a tint
+        this.setCrop(0, 0, Math.min(64, fullWidth), Math.min(64, fullHeight));
+        this.setTint(0xff0000); // Red to indicate error
+        this.setAlpha(1);
+        this.setVisible(true);
       }
     } else {
-      console.warn("Could not crop joust sprites - texture not found");
+      console.error(
+        "❌ Could not crop joust sprites - texture not found or not loaded"
+      );
+      // Create a colored rectangle as fallback
+      this.setTint(this.config.tint ?? 0xff0000); // Red if no tint specified
+      this.setAlpha(1);
+      this.setVisible(true);
     }
   }
 
   /**
-   * Get the platform configuration
+   * Get the platform configuration (returns the exact config object, no cloning)
    */
   getConfig(): PlatformConfig {
-    return { ...this.config };
+    return this.config;
   }
 
   /**
-   * Update the platform's slice index (change visual appearance)
+   * Update the platform's crop coordinates (change visual appearance)
    */
-  setSliceIndex(sliceIndex: number): void {
-    this.config.sliceIndex = sliceIndex;
-    this.createCrop(sliceIndex);
+  setCropCoordinates(
+    cropX: number,
+    cropY: number,
+    cropWidth: number,
+    cropHeight: number
+  ): void {
+    this.config.cropX = cropX;
+    this.config.cropY = cropY;
+    this.config.cropWidth = cropWidth;
+    this.config.cropHeight = cropHeight;
+    this.createCrop();
+    this.stretchToFitPlatform();
   }
 
   /**
@@ -180,34 +238,6 @@ export class PlatformManager {
   private platforms: Platform[] = [];
   private readonly platformGroup: Phaser.Physics.Arcade.StaticGroup;
 
-  // Predefined platform configurations
-  public static readonly PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
-    STONE_PLATFORM: {
-      sliceIndex: 0,
-      name: "Stone Platform",
-      width: 250,
-      height: 40,
-      tint: 0x808080,
-      solid: true,
-    },
-    METAL_PLATFORM: {
-      sliceIndex: 3,
-      name: "Metal Platform",
-      width: 200,
-      height: 40,
-      tint: 0x404040,
-      solid: true,
-    },
-    CRYSTAL_PLATFORM: {
-      sliceIndex: 7,
-      name: "Crystal Platform",
-      width: 220,
-      height: 40,
-      tint: 0x00ffff,
-      solid: true,
-    },
-  };
-
   constructor(scene: Scene) {
     this.scene = scene;
     this.platformGroup = scene.physics.add.staticGroup();
@@ -219,9 +249,9 @@ export class PlatformManager {
   createPlatform(
     x: number,
     y: number,
-    configKey: keyof typeof PlatformManager.PLATFORM_CONFIGS
+    configKey: keyof typeof PLATFORM_CONFIGS
   ): Platform {
-    const config = PlatformManager.PLATFORM_CONFIGS[configKey];
+    const config = getPlatformConfig(configKey);
     const platform = new Platform(this.scene, x, y, config);
 
     this.platforms.push(platform);
@@ -266,31 +296,27 @@ export class PlatformManager {
   }
 
   /**
-   * Create a visual demonstration of all available slice indices
+   * Create a visual demonstration of the available configured platforms
    */
-  createSliceDemo(startX: number, startY: number, spacing: number = 150): void {
-    console.log("Creating platform slice demonstration...");
+  createPlatformDemo(
+    startX: number,
+    startY: number,
+    spacing: number = 150
+  ): void {
+    console.log("Creating platform demonstration...");
 
-    // With 14 columns and probably 28 rows (double), we have many more platforms available
-    const maxSlicesToShow = 28; // Show more slices to demonstrate the 14-column grid
+    // Get all predefined platform configs (now includes all manually configured platforms)
+    const configKeys = getPlatformConfigKeys();
 
-    for (let i = 0; i < maxSlicesToShow; i++) {
-      const x = startX + (i % 14) * spacing; // 14 columns per row
-      const y = startY + Math.floor(i / 14) * 100; // New row every 14 platforms
+    configKeys.forEach((key, i) => {
+      const x = startX + (i % 3) * spacing; // 3 columns per row
+      const y = startY + Math.floor(i / 3) * 100; // New row every 3 platforms
 
-      const config: PlatformConfig = {
-        sliceIndex: i,
-        name: `Slice ${i}`,
-        width: 120,
-        height: 32,
-        solid: true,
-      };
+      this.createPlatform(x, y, key);
 
-      this.createCustomPlatform(x, y, config);
-
-      // Add text label showing slice index
+      // Add text label showing platform name
       this.scene.add
-        .text(x, y - 50, `Slice ${i}`, {
+        .text(x, y - 50, PLATFORM_CONFIGS[key].name, {
           fontFamily: "Arial",
           fontSize: 12,
           color: "#ffffff",
@@ -298,6 +324,6 @@ export class PlatformManager {
           padding: { x: 4, y: 2 },
         })
         .setOrigin(0.5);
-    }
+    });
   }
 }

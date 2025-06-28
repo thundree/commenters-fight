@@ -53,12 +53,12 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       1200,
       worldHeight - 80,
-      "STONE_PLATFORM"
+      "WOODEN_PLATFORM"
     );
     this.platformManager.createPlatform(
       1550,
       worldHeight - 80,
-      "METAL_PLATFORM"
+      "BRIDGE_PLATFORM"
     );
     this.platformManager.createPlatform(
       1850,
@@ -71,7 +71,7 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       75,
       worldHeight - 250,
-      "CRYSTAL_PLATFORM"
+      "WOODEN_PLATFORM"
     );
     this.platformManager.createPlatform(
       325,
@@ -81,7 +81,7 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       675,
       worldHeight - 280,
-      "METAL_PLATFORM"
+      "BRIDGE_PLATFORM"
     );
     this.platformManager.createPlatform(
       1025,
@@ -91,12 +91,12 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       1375,
       worldHeight - 260,
-      "STONE_PLATFORM"
+      "METAL_PLATFORM"
     );
     this.platformManager.createPlatform(
       1725,
       worldHeight - 210,
-      "METAL_PLATFORM"
+      "WOODEN_PLATFORM"
     );
   }
 
@@ -104,7 +104,7 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       200,
       worldHeight - 400,
-      "METAL_PLATFORM"
+      "BRIDGE_PLATFORM"
     );
     this.platformManager.createPlatform(
       550,
@@ -114,7 +114,7 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       900,
       worldHeight - 380,
-      "STONE_PLATFORM"
+      "WOODEN_PLATFORM"
     );
     this.platformManager.createPlatform(
       1250,
@@ -124,7 +124,7 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       1600,
       worldHeight - 390,
-      "CRYSTAL_PLATFORM"
+      "STONE_PLATFORM"
     );
   }
 
@@ -137,17 +137,17 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       450,
       worldHeight - 650,
-      "STONE_PLATFORM"
+      "BRIDGE_PLATFORM"
     );
     this.platformManager.createPlatform(
       800,
       worldHeight - 580,
-      "METAL_PLATFORM"
+      "WOODEN_PLATFORM"
     );
     this.platformManager.createPlatform(
       1150,
       worldHeight - 620,
-      "CRYSTAL_PLATFORM"
+      "METAL_PLATFORM"
     );
     this.platformManager.createPlatform(
       1500,
@@ -157,7 +157,7 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       1850,
       worldHeight - 630,
-      "METAL_PLATFORM"
+      "CRYSTAL_PLATFORM"
     );
   }
 
@@ -165,22 +165,22 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       275,
       worldHeight - 800,
-      "CRYSTAL_PLATFORM"
+      "WOODEN_PLATFORM"
     );
     this.platformManager.createPlatform(
       625,
       worldHeight - 850,
-      "STONE_PLATFORM"
+      "BRIDGE_PLATFORM"
     );
     this.platformManager.createPlatform(
       975,
       worldHeight - 780,
-      "METAL_PLATFORM"
+      "CRYSTAL_PLATFORM"
     );
     this.platformManager.createPlatform(
       1325,
       worldHeight - 820,
-      "CRYSTAL_PLATFORM"
+      "METAL_PLATFORM"
     );
     this.platformManager.createPlatform(
       1675,
@@ -193,17 +193,17 @@ export class PlatformCreator {
     this.platformManager.createPlatform(
       400,
       worldHeight - 1000,
-      "METAL_PLATFORM"
+      "BRIDGE_PLATFORM"
     );
     this.platformManager.createPlatform(
       800,
       worldHeight - 1050,
-      "CRYSTAL_PLATFORM"
+      "WOODEN_PLATFORM"
     );
     this.platformManager.createPlatform(
       1200,
       worldHeight - 980,
-      "STONE_PLATFORM"
+      "CRYSTAL_PLATFORM"
     );
     this.platformManager.createPlatform(
       1600,
@@ -213,30 +213,28 @@ export class PlatformCreator {
   }
 
   private createSpecialPlatforms(worldHeight: number): void {
-    this.platformManager.createCustomPlatform(1000, worldHeight - 1200, {
-      sliceIndex: 9,
-      name: "Golden Platform",
-      width: 300,
-      height: 40,
-      tint: 0xffd700,
-      solid: true,
-    });
+    // Use the new wooden and bridge platform types (manually configured in PlatformConfigurator)
+    this.platformManager.createPlatform(
+      1000,
+      worldHeight - 1200,
+      "WOODEN_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      500,
+      worldHeight - 1150,
+      "BRIDGE_PLATFORM"
+    );
 
-    this.platformManager.createCustomPlatform(500, worldHeight - 1150, {
-      sliceIndex: 11,
-      name: "Ruby Platform",
-      width: 250,
-      height: 35,
-      tint: 0xff1493,
-      solid: true,
-    });
-
+    // Create a custom golden platform using Platform 1 as base
     this.platformManager.createCustomPlatform(1500, worldHeight - 1180, {
-      sliceIndex: 13,
-      name: "Emerald Platform",
-      width: 280,
-      height: 38,
-      tint: 0x00ff7f,
+      name: "Golden Platform",
+      cropX: 80, // Same as Platform 1
+      cropY: 0,
+      cropWidth: 90,
+      cropHeight: 18,
+      displayWidth: 300,
+      displayHeight: 40,
+      tint: 0xffd700, // Gold tint
       solid: true,
     });
   }

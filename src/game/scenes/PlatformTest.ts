@@ -12,6 +12,10 @@ export class PlatformTest extends Scene {
   create() {
     this.cameras.main.setBackgroundColor(0x2c3e50);
 
+    // Enable physics debug rendering to see collision bodies
+    this.physics.world.createDebugGraphic();
+    this.physics.world.debugGraphic.setAlpha(0.75);
+
     // Create platform manager
     this.platformManager = new PlatformManager(this);
 
@@ -115,13 +119,15 @@ export class PlatformTest extends Scene {
   }
 
   private createTestPlatforms(): void {
-    // Create simple test platforms at known positions
+    // Create simple test platforms at known positions using the manually configured platforms
     console.log("Creating test platforms for physics testing...");
 
-    // Create a few platforms at different heights
+    // Create a few platforms at different heights using all available types
     this.platformManager.createPlatform(300, 500, "STONE_PLATFORM");
     this.platformManager.createPlatform(500, 400, "METAL_PLATFORM");
     this.platformManager.createPlatform(700, 350, "CRYSTAL_PLATFORM");
+    this.platformManager.createPlatform(200, 300, "WOODEN_PLATFORM");
+    this.platformManager.createPlatform(850, 450, "BRIDGE_PLATFORM");
 
     console.log(
       "Test platforms created:",

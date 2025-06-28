@@ -1,16 +1,6 @@
 import { Scene } from "phaser";
-
-interface PlatformConfig {
-  name: string;
-  cropX: number;
-  cropY: number;
-  cropWidth: number;
-  cropHeight: number;
-  displayWidth: number;
-  displayHeight: number;
-  tint?: number;
-  solid: boolean;
-}
+import { PlatformConfig } from "../Platform";
+import { PLATFORM_CONFIGS } from "../constants/PlatformConfigs";
 
 export class PlatformConfigurator extends Scene {
   private selectedPlatform: number = 0;
@@ -21,64 +11,8 @@ export class PlatformConfigurator extends Scene {
   private selectionRect: Phaser.GameObjects.Rectangle;
   private readonly platformButtons: Phaser.GameObjects.Container[] = [];
 
-  // Manual platform configurations - adjust these positions as needed
-  private readonly platformConfigs: PlatformConfig[] = [
-    {
-      name: "Platform 1",
-      cropX: 80,
-      cropY: 0,
-      cropWidth: 90,
-      cropHeight: 18,
-      displayWidth: 90,
-      displayHeight: 18,
-      tint: 0xffffff,
-      solid: true,
-    },
-    {
-      name: "Platform 2",
-      cropX: 184,
-      cropY: 0,
-      cropWidth: 180,
-      cropHeight: 18,
-      displayWidth: 180,
-      displayHeight: 18,
-      tint: 0xffffff,
-      solid: true,
-    },
-    {
-      name: "Platform 3",
-      cropX: 0,
-      cropY: 29,
-      cropWidth: 120,
-      cropHeight: 25,
-      displayWidth: 120,
-      displayHeight: 25,
-      tint: 0xffffff,
-      solid: true,
-    },
-    {
-      name: "Platform 4",
-      cropX: 130,
-      cropY: 29,
-      cropWidth: 95,
-      cropHeight: 18,
-      displayWidth: 95,
-      displayHeight: 18,
-      tint: 0xffffff,
-      solid: true,
-    },
-    {
-      name: "Platform 5",
-      cropX: 234,
-      cropY: 29,
-      cropWidth: 128,
-      cropHeight: 18,
-      displayWidth: 128,
-      displayHeight: 18,
-      tint: 0xffffff,
-      solid: true,
-    },
-  ];
+  private readonly platformConfigs: PlatformConfig[] =
+    Object.values(PLATFORM_CONFIGS);
 
   constructor() {
     super("PlatformConfigurator");
