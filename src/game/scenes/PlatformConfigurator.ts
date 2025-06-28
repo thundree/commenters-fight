@@ -126,7 +126,7 @@ export class PlatformConfigurator extends Scene {
       [
         `📊 Sprite Sheet Info:`,
         `Total Size: ${fullWidth} x ${fullHeight}px`,
-        `Configuring 3 Manual Platform Types`,
+        `Configuring ${this.platformConfigs.length} Manual Platform Types`,
         `Adjust cropX, cropY, cropWidth, cropHeight in code`,
       ],
       {
@@ -156,7 +156,7 @@ export class PlatformConfigurator extends Scene {
       this.cameras.main.height - 100,
       [
         "🎮 Controls:",
-        "• Click Platform 1, 2, or 3 buttons to select",
+        "• Click Platform buttons or use keys 1-5 to select",
         "• ESC: Return to Main Menu",
         "• P: Go to Platform Test Scene",
         "• Adjust crop values in code to position selections",
@@ -180,8 +180,8 @@ export class PlatformConfigurator extends Scene {
         this.scene.start("PlatformTest");
       });
 
-      // Number keys 1-3 for platform selection
-      for (let i = 1; i <= 3; i++) {
+      // Number keys 1-5 for platform selection
+      for (let i = 1; i <= this.platformConfigs.length; i++) {
         this.input.keyboard.on(`keydown-${i}`, () => {
           this.selectPlatform(i - 1);
         });
@@ -428,6 +428,7 @@ export class PlatformConfigurator extends Scene {
         config.cropWidth,
         config.cropHeight
       );
+      // Use the configured display size to show how it will look in game
       this.previewPlatform.setDisplaySize(
         config.displayWidth,
         config.displayHeight
@@ -485,7 +486,13 @@ const platform = new Platform(scene, x, y, config);
       "💡 To adjust crop position:",
       "1. Edit platformConfigs array in code",
       "2. Modify cropX, cropY, cropWidth, cropHeight",
-      "3. Reload to see changes",
+      "3. Modify displayWidth, displayHeight for stretching",
+      "4. Reload to see changes",
+      "",
+      `🔍 Current: Crop ${config.cropWidth}x${config.cropHeight} → Display ${config.displayWidth}x${config.displayHeight}`,
+      `📏 Stretch Factor: X=${(config.displayWidth / config.cropWidth).toFixed(
+        2
+      )}x, Y=${(config.displayHeight / config.cropHeight).toFixed(2)}x`,
       "",
       "Configuration:",
       exampleConfig,
