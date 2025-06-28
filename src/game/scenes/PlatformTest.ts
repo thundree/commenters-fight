@@ -114,23 +114,6 @@ export class PlatformTest extends Scene {
     }
   }
 
-  private createExamplePlatforms(): void {
-    // Create some example platforms using predefined configurations
-    this.platformManager.createPlatform(400, 400, "STONE_PLATFORM");
-    this.platformManager.createPlatform(600, 350, "METAL_PLATFORM");
-    this.platformManager.createPlatform(800, 450, "CRYSTAL_PLATFORM");
-
-    // Create a custom platform
-    this.platformManager.createCustomPlatform(500, 500, {
-      sliceIndex: 5,
-      name: "Custom Platform",
-      width: 250,
-      height: 40,
-      tint: 0xff00ff,
-      solid: true,
-    });
-  }
-
   private createTestPlatforms(): void {
     // Create simple test platforms at known positions
     console.log("Creating test platforms for physics testing...");
