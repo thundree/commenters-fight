@@ -28,6 +28,7 @@ export class Preloader extends Scene {
 
     this.load.image("logo", "logo.png");
     this.load.image("ship", "ship.png"); // Load the ship sprite for players
+    this.load.image("joust-sprites", "joust-sprites.jpg"); // Load joust sprites for platforms
   }
 
   create() {

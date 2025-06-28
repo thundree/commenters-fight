@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import { ServiceManager } from "../../services/ServiceManager";
+import { PlatformManager } from "../Platform";
 import {
   YouTubeCommentsResponse,
   CommentThread,
@@ -9,6 +10,7 @@ export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   controls: Phaser.Cameras.Controls.SmoothedKeyControl;
   boxes: Phaser.Physics.Arcade.Group;
+  private platformManager: PlatformManager;
   private youtubeNames: string[] = [];
   private readonly serviceManager: ServiceManager;
   private scoreText: Phaser.GameObjects.Text;
@@ -73,6 +75,10 @@ export class Game extends Scene {
     // Create a group for our boxes
     this.boxes = this.physics.add.group();
 
+    // Create platform manager and add platforms
+    this.platformManager = new PlatformManager(this);
+    this.createGamePlatforms();
+
     // Extract YouTube commenter names from passed data or fetch them
     if (data?.commentsData) {
       console.log("Using passed comments data from MainMenu");
@@ -93,18 +99,33 @@ export class Game extends Scene {
       );
     });
 
+    // Add collisions between players and platforms
+    this.physics.add.collider(
+      this.boxes,
+      this.platformManager.getPlatformGroup()
+    );
+
     // Set up camera controls
     this.setupCameraControls();
 
     // Add instructions text
     this.add
-      .text(16, 16, "Use Arrow Keys to move camera", {
-        fontFamily: "Arial",
-        fontSize: 16,
-        color: "#ffffff",
-        backgroundColor: "#000000",
-        padding: { x: 10, y: 10 },
-      })
+      .text(
+        16,
+        16,
+        [
+          "🎮 Use Arrow Keys to move camera",
+          "⚔️ Players fight for platform dominance!",
+          "🏛️ Land on platforms to gain advantage",
+        ],
+        {
+          fontFamily: "Arial",
+          fontSize: 14,
+          color: "#ffffff",
+          backgroundColor: "#000000",
+          padding: { x: 10, y: 10 },
+        }
+      )
       .setZ(10) // Ensure text is above other objects
       .setScrollFactor(0); // Keep text fixed to camera
 
@@ -304,6 +325,10 @@ export class Game extends Scene {
       // Make the ship larger (2x scale)
       box.setScale(2);
 
+      // Set bounce properties for better platform interaction
+      box.setBounce(0.3);
+      box.setCollideWorldBounds(false); // Allow wrapping instead
+
       // Set random color tint
       box.setTint(Phaser.Math.RND.pick(colors));
 
@@ -343,6 +368,213 @@ export class Game extends Scene {
       // Add to the ships group
       this.boxes.add(box);
     }
+  }
+
+  private createGamePlatforms(): void {
+    // Create multiple platforms across the game world
+    const worldHeight = 1536;
+
+    // Bottom platforms (ground level) - spread out more
+    this.platformManager.createPlatform(
+      150,
+      worldHeight - 80,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      500,
+      worldHeight - 80,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      850,
+      worldHeight - 80,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1200,
+      worldHeight - 80,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1550,
+      worldHeight - 80,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1850,
+      worldHeight - 80,
+      "CRYSTAL_PLATFORM"
+    );
+
+    // Lower-mid platforms
+    this.platformManager.createPlatform(
+      75,
+      worldHeight - 250,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      325,
+      worldHeight - 200,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      675,
+      worldHeight - 280,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1025,
+      worldHeight - 220,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1375,
+      worldHeight - 260,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1725,
+      worldHeight - 210,
+      "METAL_PLATFORM"
+    );
+
+    // Mid-level platforms
+    this.platformManager.createPlatform(
+      200,
+      worldHeight - 400,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      550,
+      worldHeight - 450,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      900,
+      worldHeight - 380,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1250,
+      worldHeight - 420,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1600,
+      worldHeight - 390,
+      "CRYSTAL_PLATFORM"
+    );
+
+    // Upper platforms
+    this.platformManager.createPlatform(
+      100,
+      worldHeight - 600,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      450,
+      worldHeight - 650,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      800,
+      worldHeight - 580,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1150,
+      worldHeight - 620,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1500,
+      worldHeight - 590,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1850,
+      worldHeight - 630,
+      "METAL_PLATFORM"
+    );
+
+    // High platforms (strategic positions)
+    this.platformManager.createPlatform(
+      275,
+      worldHeight - 800,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      625,
+      worldHeight - 850,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      975,
+      worldHeight - 780,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1325,
+      worldHeight - 820,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1675,
+      worldHeight - 790,
+      "STONE_PLATFORM"
+    );
+
+    // Top platforms (hardest to reach)
+    this.platformManager.createPlatform(
+      400,
+      worldHeight - 1000,
+      "METAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      800,
+      worldHeight - 1050,
+      "CRYSTAL_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1200,
+      worldHeight - 980,
+      "STONE_PLATFORM"
+    );
+    this.platformManager.createPlatform(
+      1600,
+      worldHeight - 1020,
+      "METAL_PLATFORM"
+    );
+
+    // Special custom platforms with unique properties
+    this.platformManager.createCustomPlatform(1000, worldHeight - 1200, {
+      sliceIndex: 9,
+      name: "Golden Platform",
+      width: 300,
+      height: 40,
+      tint: 0xffd700,
+      solid: true,
+    });
+
+    this.platformManager.createCustomPlatform(500, worldHeight - 1150, {
+      sliceIndex: 11,
+      name: "Ruby Platform",
+      width: 250,
+      height: 35,
+      tint: 0xff1493,
+      solid: true,
+    });
+
+    this.platformManager.createCustomPlatform(1500, worldHeight - 1180, {
+      sliceIndex: 13,
+      name: "Emerald Platform",
+      width: 280,
+      height: 38,
+      tint: 0x00ff7f,
+      solid: true,
+    });
+
+    console.log("Created strategic platform layout across the world");
   }
 
   setupCameraControls() {
@@ -528,7 +760,7 @@ export class Game extends Scene {
         if (_time - lastFlapTime > nextFlapTime) {
           // Apply upward flap force while preserving horizontal movement
           const currentVelX = physicsBox.body.velocity.x;
-          const flapForce = activePlayers < 8 ? -250 : -200; // Stronger flap when < 8 players
+          const flapForce = activePlayers < 8 ? -180 : -150; // Reduced flap force to make platforms more important
           physicsBox.setVelocity(currentVelX, flapForce);
 
           // Set next flap time (faster when speed boosted)
@@ -962,6 +1194,10 @@ export class Game extends Scene {
 
     // Make the ship larger (2x scale)
     box.setScale(2);
+
+    // Set bounce properties for better platform interaction
+    box.setBounce(0.3);
+    box.setCollideWorldBounds(false); // Allow wrapping instead
 
     const colors = [
       0xff6b6b, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xfeca57, 0xff9ff3, 0x54a0ff,

@@ -54,7 +54,7 @@ export class MainMenu extends Scene {
       .text(
         this.cameras.main.width / 2,
         this.cameras.main.height / 2 + 50,
-        "Fetching data from YouTube API... Click anywhere to start!",
+        "Fetching data from YouTube API...",
         {
           fontFamily: "Arial",
           fontSize: 16,
@@ -64,24 +64,11 @@ export class MainMenu extends Scene {
       )
       .setOrigin(0.5);
 
+    // Add navigation menu
+    this.createNavigationMenu();
+
     // Fetch YouTube comments
     this.fetchCommentsData();
-
-    this.input.once("pointerdown", () => {
-      console.log("Starting game...");
-      if (this.commentsData) {
-        console.log(
-          "Comments data loaded, starting game with:",
-          this.commentsData
-        );
-        // Pass the comments data to the Game scene
-        this.scene.start("Game", { commentsData: this.commentsData });
-      } else {
-        console.log("Comments data not loaded, game will use fallback names");
-        // Start game without data (will use fallback names)
-        this.scene.start("Game");
-      }
-    });
 
     // Listen for resize events to update gradient
     this.scale.on("resize", this.updateGradient, this);
@@ -114,7 +101,7 @@ export class MainMenu extends Scene {
       if (this.scene.isActive() && this.loadingText && this.statusText) {
         this.loadingText.setText("Comments loaded!");
         this.statusText.setText(
-          `Found ${this.commentsData.items.length} comments. Click to start game.`
+          `Found ${this.commentsData.items.length} comments. Use the menu below to start.`
         );
       }
 
@@ -151,7 +138,9 @@ export class MainMenu extends Scene {
       // Update UI only if scene is still active
       if (this.scene.isActive() && this.loadingText && this.statusText) {
         this.loadingText.setText("Failed to load comments");
-        this.statusText.setText("Using default names. Click to start game!");
+        this.statusText.setText(
+          "Using default names. Use the menu below to start!"
+        );
       }
     }
   }
@@ -182,5 +171,152 @@ export class MainMenu extends Scene {
 
     // Fill the entire screen
     this.gradientGraphics.fillRect(0, 0, width, height);
+  }
+
+  createNavigationMenu() {
+    const menuY = this.cameras.main.height - 150;
+    const buttonSpacing = 200;
+
+    // Create menu background
+    this.add.rectangle(
+      this.cameras.main.width / 2,
+      menuY,
+      this.cameras.main.width - 40,
+      100,
+      0x000000,
+      0.7
+    );
+
+    // Add menu title
+    this.add
+      .text(this.cameras.main.width / 2, menuY - 35, "🎮 Game Options", {
+        fontFamily: "Arial",
+        fontSize: 16,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 2,
+      })
+      .setOrigin(0.5);
+
+    // Button 1: Start Game
+    const startButton = this.add
+      .text(
+        this.cameras.main.width / 2 - buttonSpacing,
+        menuY,
+        "▶️ Start Game",
+        {
+          fontFamily: "Arial",
+          fontSize: 14,
+          color: "#ffffff",
+          backgroundColor: "#2d5a3d",
+          padding: { x: 12, y: 8 },
+        }
+      )
+      .setOrigin(0.5)
+      .setInteractive();
+
+    startButton.on("pointerdown", () => {
+      console.log("Starting game...");
+      if (this.commentsData) {
+        console.log(
+          "Comments data loaded, starting game with:",
+          this.commentsData
+        );
+        this.scene.start("Game", { commentsData: this.commentsData });
+      } else {
+        console.log("Comments data not loaded, game will use fallback names");
+        this.scene.start("Game");
+      }
+    });
+
+    startButton.on("pointerover", () => {
+      startButton.setBackgroundColor("#4a8c5a");
+    });
+
+    startButton.on("pointerout", () => {
+      startButton.setBackgroundColor("#2d5a3d");
+    });
+
+    // Button 2: Platform Configurator
+    const configButton = this.add
+      .text(this.cameras.main.width / 2, menuY, "🛠️ Platform Config", {
+        fontFamily: "Arial",
+        fontSize: 14,
+        color: "#ffffff",
+        backgroundColor: "#3d4b5a",
+        padding: { x: 12, y: 8 },
+      })
+      .setOrigin(0.5)
+      .setInteractive();
+
+    configButton.on("pointerdown", () => {
+      this.scene.start("PlatformConfigurator");
+    });
+
+    configButton.on("pointerover", () => {
+      configButton.setBackgroundColor("#5a6b7d");
+    });
+
+    configButton.on("pointerout", () => {
+      configButton.setBackgroundColor("#3d4b5a");
+    });
+
+    // Button 3: Platform Test
+    const testButton = this.add
+      .text(
+        this.cameras.main.width / 2 + buttonSpacing,
+        menuY,
+        "🧪 Platform Test",
+        {
+          fontFamily: "Arial",
+          fontSize: 14,
+          color: "#ffffff",
+          backgroundColor: "#5a3d2d",
+          padding: { x: 12, y: 8 },
+        }
+      )
+      .setOrigin(0.5)
+      .setInteractive();
+
+    testButton.on("pointerdown", () => {
+      this.scene.start("PlatformTest");
+    });
+
+    testButton.on("pointerover", () => {
+      testButton.setBackgroundColor("#8c5a4a");
+    });
+
+    testButton.on("pointerout", () => {
+      testButton.setBackgroundColor("#5a3d2d");
+    });
+
+    // Add keyboard shortcuts info
+    this.add
+      .text(
+        this.cameras.main.width / 2,
+        menuY + 35,
+        "Shortcuts: SPACE = Start Game | C = Platform Config | T = Platform Test",
+        {
+          fontFamily: "Arial",
+          fontSize: 10,
+          color: "#cccccc",
+        }
+      )
+      .setOrigin(0.5);
+
+    // Add keyboard controls
+    if (this.input.keyboard) {
+      this.input.keyboard.on("keydown-SPACE", () => {
+        startButton.emit("pointerdown");
+      });
+
+      this.input.keyboard.on("keydown-C", () => {
+        configButton.emit("pointerdown");
+      });
+
+      this.input.keyboard.on("keydown-T", () => {
+        testButton.emit("pointerdown");
+      });
+    }
   }
 }
