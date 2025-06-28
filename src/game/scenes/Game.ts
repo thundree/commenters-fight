@@ -301,6 +301,9 @@ export class Game extends Scene {
       // Create a physics-enabled image using the ship sprite
       const box = this.physics.add.image(x, y, "ship");
 
+      // Make the ship larger (2x scale)
+      box.setScale(2);
+
       // Set random color tint
       box.setTint(Phaser.Math.RND.pick(colors));
 
@@ -535,7 +538,7 @@ export class Game extends Scene {
 
         // Screen wrapping logic - teleport to opposite side when half the ship is off the camera view
         const camera = this.cameras.main;
-        const halfSpriteSize = 20; // Approximate half size of ship sprite
+        const halfSpriteSize = 40; // Approximate half size of scaled ship sprite (2x scale)
 
         // Get camera bounds (visible area)
         const leftBound = camera.scrollX;
@@ -956,6 +959,9 @@ export class Game extends Scene {
 
     // Create the new player using ship sprite
     const box = this.physics.add.image(x, y, "ship");
+
+    // Make the ship larger (2x scale)
+    box.setScale(2);
 
     const colors = [
       0xff6b6b, 0x4ecdc4, 0x45b7d1, 0x96ceb4, 0xfeca57, 0xff9ff3, 0x54a0ff,
