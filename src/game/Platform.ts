@@ -2,7 +2,6 @@ import { Scene } from "phaser";
 import {
   PLATFORM_CONFIGS,
   getPlatformConfig,
-  getPlatformConfigKeys,
 } from "./constants/PlatformConfigs";
 
 export interface PlatformConfig {
@@ -246,12 +245,8 @@ export class PlatformManager {
   /**
    * Create a platform at the specified position using a predefined configuration
    */
-  createPlatform(
-    x: number,
-    y: number,
-    configKey: keyof typeof PLATFORM_CONFIGS
-  ): Platform {
-    const config = getPlatformConfig(configKey);
+  createPlatform(x: number, y: number, configIndex: number): Platform {
+    const config = getPlatformConfig(configIndex);
     const platform = new Platform(this.scene, x, y, config);
 
     this.platforms.push(platform);
@@ -306,17 +301,17 @@ export class PlatformManager {
     console.log("Creating platform demonstration...");
 
     // Get all predefined platform configs (now includes all manually configured platforms)
-    const configKeys = getPlatformConfigKeys();
+    const configCount = PLATFORM_CONFIGS.length;
 
-    configKeys.forEach((key, i) => {
+    for (let i = 0; i < configCount; i++) {
       const x = startX + (i % 3) * spacing; // 3 columns per row
       const y = startY + Math.floor(i / 3) * 100; // New row every 3 platforms
 
-      this.createPlatform(x, y, key);
+      this.createPlatform(x, y, i);
 
       // Add text label showing platform name
       this.scene.add
-        .text(x, y - 50, PLATFORM_CONFIGS[key].name, {
+        .text(x, y - 50, PLATFORM_CONFIGS[i].name, {
           fontFamily: "Arial",
           fontSize: 12,
           color: "#ffffff",
@@ -324,6 +319,6 @@ export class PlatformManager {
           padding: { x: 4, y: 2 },
         })
         .setOrigin(0.5);
-    });
+    }
   }
 }

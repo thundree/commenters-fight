@@ -123,11 +123,11 @@ export class PlatformTest extends Scene {
     console.log("Creating test platforms for physics testing...");
 
     // Create a few platforms at different heights using all available types
-    this.platformManager.createPlatform(300, 500, "STONE_PLATFORM");
-    this.platformManager.createPlatform(500, 400, "METAL_PLATFORM");
-    this.platformManager.createPlatform(700, 350, "CRYSTAL_PLATFORM");
-    this.platformManager.createPlatform(200, 300, "WOODEN_PLATFORM");
-    this.platformManager.createPlatform(850, 450, "BRIDGE_PLATFORM");
+    this.platformManager.createPlatform(300, 500, 0);
+    this.platformManager.createPlatform(500, 400, 1);
+    this.platformManager.createPlatform(700, 350, 2);
+    this.platformManager.createPlatform(200, 300, 3);
+    this.platformManager.createPlatform(850, 450, 4);
 
     console.log(
       "Test platforms created:",
